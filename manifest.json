@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Aggressive YouTube Filter",
+  "version": "3",
+  "description": "An extension for firefox/chrome that automatically clicks Not Interested on meaningless recommendations like already watched videos and Mix suggestions.",
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "128": "aggressive-youtube-filter-sharp.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "aggressive-youtube-filter@klesun",
+      "strict_min_version": "109.0"
+    }
+  }
+}

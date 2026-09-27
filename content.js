@@ -127,11 +127,9 @@ async function removeWatchedLaterVideos() {
         el.textContent.trim() === 'Remove from Watch later'
       )).at(0);
     if (unlistBtn) {
-      console.info('unlistBtn', unlistBtn);
       unlistBtn.click();
     }
   }
-  console.log('watched later cards', cardMenuButtons);
 }
 
 let removingWatchedLater = false;
