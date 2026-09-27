@@ -11,12 +11,16 @@
     }
   ],
   "icons": {
-    "128": "aggressive-youtube-filter-sharp.png"
+    "128": "aggressive-youtube-filter-sharp-128.png"
   },
   "browser_specific_settings": {
     "gecko": {
       "id": "aggressive-youtube-filter@klesun",
-      "strict_min_version": "109.0"
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["none"],
+        "optional": []
+      }
     }
   }
 }
