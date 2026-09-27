@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Aggressive YouTube Filter",
   "version": "3",
-  "description": "An extension for firefox/chrome that automatically clicks Not Interested on meaningless recommendations like already watched videos and Mix suggestions.",
+  "description": "Automatically clicks Not Interested on meaningless recommendations like already watched videos and Mix suggestions.",
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
