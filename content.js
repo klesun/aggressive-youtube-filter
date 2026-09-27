@@ -1,6 +1,5 @@
 // ==UserScript==
 // @name     youtube-recommendations-filter
-// @version  3
 // @match    *://*.youtube.com/*
 // @grant    none
 // @namespace org.klesun
@@ -112,14 +111,21 @@ function hideDismissedVideos() {
 
 setInterval(hideDismissedVideos, 100);
 
+function getRemovedFromWatchLaterToasts() {
+  const selector = 'yt-formatted-string.yt-notification-action-renderer';
+  const toasts = [...document.querySelectorAll(selector)];
+  console.log('toasts', toasts);
+  return toasts
+    .filter(toast => toast.textContent.trim() === 'Removed from Watch later')
+}
 
 async function removeWatchedLaterVideos() {
   const selector = 'div.ytwThumbnailOverlayResumePlaybackRendererThumbnailOverlayResumePlaybackProgress';
-  const cardMenuButtons = [...document.querySelectorAll(selector)]
+  const cards = [...document.querySelectorAll(selector)]
     .filter(el => el.style.width && +el.style.width.replace(/%$/, '') > 75)
-    .map(el => getAncestorByTag(el, 'ytd-playlist-video-renderer'))
-    .map(card => card.querySelector('button.yt-icon-button'));
-  for (const cardMenuButton of cardMenuButtons) {
+    .map(el => getAncestorByTag(el, 'ytd-playlist-video-renderer'));
+  for (const card of cards) {
+    const cardMenuButton = card.querySelector('button.yt-icon-button');
     cardMenuButton.click();
     await new Promise(resolve => setTimeout(resolve));
     const unlistBtn = [...document.querySelectorAll('ytd-menu-service-item-renderer')]
@@ -127,7 +133,20 @@ async function removeWatchedLaterVideos() {
         el.textContent.trim() === 'Remove from Watch later'
       )).at(0);
     if (unlistBtn) {
+      const videoTitle = card.querySelector('a[id="video-title"]').textContent.trim();
+      console.info('Unlisting: ' + videoTitle);
+      const lastToastsLength = getRemovedFromWatchLaterToasts().length;
       unlistBtn.click();
+      await new Promise(resolve => {
+        const handle = setInterval(() => {
+          const success = getRemovedFromWatchLaterToasts().length > lastToastsLength;
+          if (success) {
+            resolve();
+            clearInterval(handle);
+          }
+        }, 50);
+      });
+      console.info('Unlisted: ' + videoTitle);
     }
   }
 }
@@ -135,7 +154,9 @@ async function removeWatchedLaterVideos() {
 let removingWatchedLater = false;
 
 setInterval(async () => {
-  if (removingWatchedLater) {
+  const { REMOVE_WATCHED_LATER_VIDEOS } = await browser.storage.local.get('REMOVE_WATCHED_LATER_VIDEOS');
+
+  if (removingWatchedLater || !REMOVE_WATCHED_LATER_VIDEOS) {
     return;
   }
   removingWatchedLater = true;

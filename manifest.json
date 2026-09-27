@@ -1,8 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Aggressive YouTube Filter",
-  "version": "3",
+  "version": "4",
   "description": "Automatically clicks Not Interested on meaningless recommendations like already watched videos and Mix suggestions.",
+  "minimum_chrome_version": "148",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html"
+  },
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
